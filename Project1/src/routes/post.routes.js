@@ -3,6 +3,7 @@ const postRouter = express.Router()
 const postController = require("../controllers/post.controller")
 const multer = require("multer")
 const identifyUser = require("../middleware/auth.middleware")
+const likeModel = require("../models/like.model")
 
 const upload = multer({storage:multer.memoryStorage()})
 
@@ -13,6 +14,8 @@ postRouter.post("/",identifyUser,upload.single("image"),postController.createPos
 postRouter.get("/",identifyUser,postController.getPostControllers)
 
 postRouter.get("/details/:postId",identifyUser,postController.getPostDetailsController)
+
+postRouter.post("/like/:postId",identifyUser,postController.likePostController)
 
 
 
