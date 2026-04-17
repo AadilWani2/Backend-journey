@@ -58,7 +58,7 @@ async function loginController(req,res){
             email : email
         }
     ]
-    })
+    }).select("+password")
 
     if(!user){
         return res.status(404).json({
@@ -93,7 +93,23 @@ async function loginController(req,res){
     })
 }
 
+async function getMeController(req,res){
+    const user = req.user
+    const userDetails = await userModel.findById(user.id)
+    
+    res.status(200).json({
+        user : {
+            username : userDetails.username,
+            email : userDetails.email,
+            bio : userDetails.bio,
+            profileImage : userDetails.profileImage
+        }
+
+    })
+}
+
 module.exports = {
     registerController,
-    loginController
+    loginController,
+    getMeController
 }

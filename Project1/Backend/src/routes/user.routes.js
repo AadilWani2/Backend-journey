@@ -14,5 +14,8 @@ userRouter.post("/accept/:username",identifyUser,userController.acceptFollowRequ
 
 userRouter.post("/reject/:username",identifyUser,userController.rejectFollowRequestController)
 
+userRouter.get("/search", identifyUser, userController.searchUsersController)
+
+userRouter.get("/profile", identifyUser, userController.getProfileController)
 
 module.exports = userRouter

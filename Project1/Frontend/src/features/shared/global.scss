@@ -1,0 +1,21 @@
+@use "./button.scss";
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html,body,#root{
+    width: 100%;
+    background-color: #302f2f;
+    color: whitesmoke;
+}
+
+a{
+    color: #120fc1;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}

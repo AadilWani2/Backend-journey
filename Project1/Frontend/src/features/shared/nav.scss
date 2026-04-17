@@ -1,0 +1,92 @@
+/* Floating Bottom Navigation Bar */
+.bottom-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(25, 25, 35, 0.7);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 40px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    z-index: 100;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    
+    button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem;
+        border-radius: 50%;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        svg {
+            width: 26px;
+            height: 26px;
+            fill: transparent;
+            stroke: rgba(255, 255, 255, 0.6);
+            stroke-width: 2px;
+            transition: all 0.3s ease;
+        }
+
+        &.active, &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            
+            svg {
+                stroke: #ffffff;
+            }
+        }
+        
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}
+
+/* Floating Top Navigation Bar */
+.top-nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.2rem 1rem;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    
+    .logo {
+        font-family: 'Outfit', -apple-system, sans-serif;
+        font-size: 1.8rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 0;
+        background: linear-gradient(135deg, #A88BEB 0%, #F8CEEC 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+    }
+}
+
+body {
+    background-color: #0A0A0F;
+    color: #ffffff;
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}

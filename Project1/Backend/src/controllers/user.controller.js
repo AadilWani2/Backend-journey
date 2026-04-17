@@ -1,5 +1,6 @@
 const followModel = require("../models/follow.model");
 const userModel = require("../models/user.model");
+const postModel = require("../models/post.model");
 
 async function followUserController(req,res){
 
@@ -205,10 +206,64 @@ async function rejectFollowRequestController(req,res){
     })
 }
 
+async function searchUsersController(req, res) {
+    try {
+        const currentUser = req.user.username;
+        const users = await userModel.find({ username: { $ne: currentUser } }).lean();
+
+        const enhancedUsers = await Promise.all(users.map(async (u) => {
+            const isFollowing = await followModel.exists({
+                follower: currentUser,
+                following: u.username
+            });
+            return {
+                ...u,
+                isFollowing: Boolean(isFollowing),
+                password: null // hide password
+            }
+        }));
+
+        res.status(200).json({ users: enhancedUsers });
+    } catch (err) {
+        res.status(500).json({ message: "Server error searching users" });
+    }
+}
+
+async function getProfileController(req, res) {
+    try {
+        const username = req.user.username;
+        const user = await userModel.findOne({ username }).lean();
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const followersCount = await followModel.countDocuments({ following: username });
+        const followingCount = await followModel.countDocuments({ follower: username });
+        
+        const posts = await postModel.find({ user: req.user.id }).sort({ _id: -1 }).lean();
+
+        res.status(200).json({
+            user: {
+                ...user,
+                password: null
+            },
+            stats: {
+                followers: followersCount,
+                following: followingCount,
+                posts: posts.length
+            },
+            posts: posts
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error fetching profile" });
+    }
+}
+
 module.exports = {
     followUserController,
     unfollowUserController,
     getFollowRequestsController,
     acceptFollowRequestController,
-    rejectFollowRequestController
+    rejectFollowRequestController,
+    searchUsersController,
+    getProfileController
 }

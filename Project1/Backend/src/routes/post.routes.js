@@ -15,8 +15,14 @@ postRouter.get("/",identifyUser,postController.getPostControllers)
 
 postRouter.get("/details/:postId",identifyUser,postController.getPostDetailsController)
 
-postRouter.post("/like/:postId",identifyUser,postController.likePostController)
+postRouter.post("/like/:postId",identifyUser,postController.toggleLikePostController)
 
+postRouter.post("/bookmark/:postId",identifyUser,postController.toggleBookmarkController)
 
+postRouter.post("/comment/:postId",identifyUser,postController.addCommentController)
+
+postRouter.get("/feed",identifyUser,postController.getFeedController)
+
+postRouter.delete("/delete/:postId",identifyUser,postController.deletePostController)
 
 module.exports = postRouter
