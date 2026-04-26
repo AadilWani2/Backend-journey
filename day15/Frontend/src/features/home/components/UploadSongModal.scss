@@ -1,0 +1,236 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+$accent:       #8b5cf6;
+$accent-light: #a78bfa;
+$accent-glow:  rgba(139, 92, 246, 0.35);
+$bg:           rgba(12, 9, 30, 0.97);
+$border:       rgba(255, 255, 255, 0.09);
+$border-acc:   rgba(139, 92, 246, 0.3);
+$text:         #f0ecff;
+$muted:        rgba(255, 255, 255, 0.45);
+
+// overlay
+.upload-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fade-in 0.2s ease;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+// modal card
+.upload-modal {
+  width: 420px;
+  background: $bg;
+  border: 1px solid $border;
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px $border-acc,
+    0 24px 64px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: 28px;
+  font-family: "Inter", sans-serif;
+  animation: slide-up 0.25s ease;
+  position: relative;
+}
+
+// header
+.upload-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.upload-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: $text;
+  letter-spacing: -0.3px;
+}
+
+.upload-close {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid $border;
+  border-radius: 8px;
+  color: $muted;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: $text;
+  }
+}
+
+// form
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.upload-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: $accent-light;
+}
+
+// file drop zone
+.upload-dropzone {
+  border: 2px dashed $border-acc;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: rgba(139, 92, 246, 0.04);
+
+  &:hover,
+  &--active {
+    border-color: $accent;
+    background: rgba(139, 92, 246, 0.1);
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
+.upload-dropzone-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.upload-dropzone-text {
+  font-size: 13px;
+  color: $muted;
+  margin: 0;
+
+  span {
+    color: $accent-light;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.upload-file-name {
+  font-size: 12px;
+  color: $accent-light;
+  font-weight: 500;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// mood select
+.upload-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid $border;
+  border-radius: 10px;
+  color: $text;
+  font-size: 13px;
+  font-family: "Inter", sans-serif;
+  padding: 10px 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%23a78bfa'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+
+  option {
+    background: #0c091e;
+    color: $text;
+  }
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  }
+}
+
+// feedback
+.upload-feedback {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: center;
+
+  &--success {
+    background: rgba(52, 211, 153, 0.12);
+    color: #6ee7b7;
+    border: 1px solid rgba(52, 211, 153, 0.25);
+  }
+
+  &--error {
+    background: rgba(248, 113, 113, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+  }
+}
+
+// submit
+.upload-submit {
+  background: linear-gradient(135deg, $accent, #9d4edd);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: "Inter", sans-serif;
+  padding: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px $accent-glow;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+  letter-spacing: 0.2px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px $accent-glow;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}

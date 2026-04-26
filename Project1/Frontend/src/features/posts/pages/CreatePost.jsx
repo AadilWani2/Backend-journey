@@ -42,11 +42,13 @@ const CreatePost = () => {
     <main className='create-post-page'>
         <div className="form-container">
             <div className="header">
-                <button className="cancel-button" onClick={() => navigate("/")}>×</button>
-                <h1>New post</h1>
-                <button className="post-button" onClick={handleSubmit} disabled={!previewUrl}>Share</button>
+                <button className="cancel-button" onClick={() => navigate("/")}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <h1>New Post</h1>
+                <div style={{ width: '24px' }}></div> {/* Spacer for balance */}
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className="image-upload-area">
                     <input 
                         ref={fileInputRef} 
@@ -60,38 +62,30 @@ const CreatePost = () => {
                         <img src={previewUrl} alt="Preview" className="preview" />
                     ) : (
                         <div className="placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                            </svg>
-                            <span>Tap to select photo</span>
+                            <div className="icon-circle">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                </svg>
+                            </div>
+                            <span>Choose a photo to share the vibe</span>
                         </div>
                     )}
                 </div>
                 
                 <div className="caption-area">
-                    <input
+                    <textarea
                         value={caption}
                         onChange={(e)=>setCaption(e.target.value)}
-                        type="text" 
-                        placeholder="Write a caption..." 
+                        placeholder="What's on your mind?..." 
                         name="caption" 
                         id="caption" 
                     />
                 </div>
 
-                <div className="secondary-settings">
-                    <div className="setting-row">
-                        <span>Tag people</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-                    </div>
-                    <div className="setting-row">
-                        <span>Add location</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-                    </div>
-                    <div className="setting-row">
-                        <span>Add music</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-                    </div>
+                <div className="footer-action">
+                    <button className="post-button" type="submit" disabled={!previewUrl || loading}>
+                        {loading ? "Posting..." : "Post to Aura"}
+                    </button>
                 </div>
             </form>
         </div>

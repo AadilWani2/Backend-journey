@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+// ── design tokens ─────────────────────────────────────────
+$accent:        #8b5cf6;
+$accent-light:  #a78bfa;
+$accent-dark:   #6d28d9;
+$accent-glow:   rgba(139, 92, 246, 0.3);
+$bg-base:       #080614;
+$bg-surface:    #0f0c1f;
+$bg-card:       rgba(18, 14, 38, 0.95);
+$border:        rgba(255, 255, 255, 0.08);
+$border-accent: rgba(139, 92, 246, 0.25);
+$text:          #f0ecff;
+$text-muted:    rgba(255, 255, 255, 0.45);
+
+// ── reset ─────────────────────────────────────────────────
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// ── base ──────────────────────────────────────────────────
+html, body, #root {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: $bg-base;
+  color: $text;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+// subtle grid background
+body {
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(139,92,246,0.18) 0%, transparent 60%),
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+}
+
+// ── global button ─────────────────────────────────────────
+.button {
+  background: linear-gradient(135deg, $accent, #9d4edd);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px 20px;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 20px $accent-glow;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px rgba(139, 92, 246, 0.5);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+}

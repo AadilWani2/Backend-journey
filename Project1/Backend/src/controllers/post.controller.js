@@ -190,14 +190,16 @@ async function getFeedController(req,res){
                 post : post._id
             })
 
-            const commentCount = await commentModel.countDocuments({
+            // Fetch raw comments populated with their authors
+            const comments = await commentModel.find({
                 post : post._id
-            })
+            }).populate("user").lean();
 
             post.isLiked = Boolean(isLiked)
             post.isBookmarked = Boolean(isBookmarked)
             post.likeCount = likeCount
-            post.commentCount = commentCount
+            post.commentCount = comments.length
+            post.comments = comments
             return post
         }))
 

@@ -11,6 +11,8 @@ const Post = ({user,post}) => {
   const [showCommentBox, setShowCommentBox] = useState(false)
   const [commentText, setCommentText] = useState("")
   const [commentCount, setCommentCount] = useState(post.commentCount || 0)
+  const [localComments, setLocalComments] = useState(post.comments || [])
+  const [showAllComments, setShowAllComments] = useState(false)
 
   const handleLike = async () => {
     const previousLiked = isLiked;
@@ -41,15 +43,30 @@ const Post = ({user,post}) => {
     const submittedText = commentText;
     setCommentText("")
     setCommentCount(prev => prev + 1)
-    setShowCommentBox(false)
+    
+    const optimisticComment = {
+        _id: Date.now().toString(),
+        user: { username: "You" },
+        text: submittedText
+    };
+    
+    setLocalComments(prev => [...prev, optimisticComment])
+    // Only close if they haven't chosen to show all comments yet to see it
+    if(!showAllComments && localComments.length === 0) {
+        setShowCommentBox(false)
+    }
     
     try {
         await addComment(post._id, submittedText)
     } catch(e) {
         setCommentCount(prev => prev - 1)
+        setLocalComments(prev => prev.filter(c => c._id !== optimisticComment._id))
         alert("Failed to submit comment.")
     }
   }
+
+  // Determine comments to display in feed (up to the latest 2)
+  const displayedComments = localComments.slice(-2);
 
   return (
     <div className="post">
@@ -73,7 +90,7 @@ const Post = ({user,post}) => {
                 </button>
                 
                 {/* COMMENT */}
-                <button onClick={() => setShowCommentBox(!showCommentBox)} className="icon-group">
+                <button onClick={() => setShowAllComments(true)} className="icon-group">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M5.76282 17H20V5H4V18.3851L5.76282 17ZM6.45455 19L2 22.5V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V18C22 18.5523 21.5523 19 21 19H6.45455Z" />
                     </svg>
@@ -100,19 +117,105 @@ const Post = ({user,post}) => {
 
         <div className="bottom">
             <p className="caption"><strong>{user.username}</strong> {post.caption}</p>
+            
+            {/* View all comments toggle */}
+            {localComments.length > 2 && (
+                <button 
+                    onClick={() => setShowAllComments(true)}
+                    style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', padding: '0.5rem 0', cursor: 'pointer', fontSize: '0.9rem', textAlign: 'left', margin: 0}}
+                >
+                    View all {localComments.length} comments
+                </button>
+            )}
+
+            {/* Display single tiny preview comment on feed instead of pushing boundaries */}
+            {localComments.length > 0 && !showAllComments && (
+                <div className="comments-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', marginTop: '0.3rem' }}>
+                    {displayedComments.map(c => (
+                        <p key={c._id} style={{ margin: 0, fontSize: '0.9rem' }}>
+                            <strong style={{ opacity: 0.9 }}>{c.user?.username}</strong> <span style={{ opacity: 0.7 }}>{c.text}</span>
+                        </p>
+                    ))}
+                </div>
+            )}
         </div>   
 
-        {showCommentBox && (
-            <form onSubmit={handleCommentSubmit} className="comment-form">
-                <input 
-                    type="text" 
-                    placeholder="Add a comment..." 
-                    value={commentText} 
-                    onChange={e => setCommentText(e.target.value)} 
-                    autoFocus
-                />
-                <button type="submit" disabled={!commentText.trim()}>Post</button>
-            </form>
+        {/* The New Fullscreen Glassmorphic Comments Section */}
+        {showAllComments && (
+             <div style={{
+                position: 'fixed',
+                top: 0, left: 0, right: 0, bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                backdropFilter: 'blur(20px)',
+                zIndex: 9999,
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                {/* Modal Header */}
+                <div style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                    <h2 style={{margin: 0, fontSize: '1.2rem', color: 'white'}}>Comments</h2>
+                    <button 
+                        onClick={() => setShowAllComments(false)}
+                        style={{background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '35px', height: '35px', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                {/* Scrollable Comments Thread */}
+                <div style={{
+                    flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.2rem'
+                }}>
+                    {localComments.length === 0 ? (
+                        <div style={{textAlign: 'center', color: 'rgba(255,255,255,0.4)', marginTop: '2rem'}}>No comments yet. Be the first!</div>
+                    ) : (
+                        localComments.map(c => (
+                            <div key={c._id} style={{display: 'flex', gap: '1rem', alignItems: 'flex-start'}}>
+                                <div style={{width: '35px', height: '35px', borderRadius: '50%', background: 'linear-gradient(135deg, #A88BEB 0%, #F8CEEC 100%)', flexShrink: 0}} />
+                                <div>
+                                    <span style={{fontWeight: 'bold', color: 'white', marginRight: '0.5rem', fontSize: '0.95rem'}}>{c.user?.username}</span>
+                                    <span style={{color: 'rgba(255,255,255,0.8)', fontSize: '0.95rem', lineHeight: '1.4'}}>{c.text}</span>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                {/* Input Area anchored to bottom */}
+                <div style={{
+                    padding: '1.5rem',
+                    background: '#0A0A0F',
+                    borderTop: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                     <form onSubmit={handleCommentSubmit} style={{display: 'flex', gap: '1rem'}}>
+                        <input 
+                            type="text" 
+                            placeholder="Add a comment..." 
+                            value={commentText} 
+                            onChange={e => setCommentText(e.target.value)} 
+                            autoFocus
+                            style={{
+                                flex: 1, padding: '1rem 1.2rem', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.1)',
+                                background: 'rgba(255,255,255,0.05)', color: 'white', outline: 'none'
+                            }}
+                        />
+                        <button 
+                            type="submit" 
+                            disabled={!commentText.trim()}
+                            style={{
+                                background: commentText.trim() ? '#A88BEB' : 'rgba(255,255,255,0.1)',
+                                color: commentText.trim() ? '#0A0A0F' : 'rgba(255,255,255,0.3)',
+                                border: 'none', borderRadius: '100px', padding: '0 1.5rem', fontWeight: 'bold', cursor: commentText.trim() ? 'pointer' : 'not-allowed', transition: '0.2s'
+                            }}
+                        >
+                            Post
+                        </button>
+                    </form>
+                </div>
+            </div>
         )}
     </div>
   )
